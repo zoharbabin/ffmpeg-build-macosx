@@ -51,6 +51,10 @@ Example fisheye removal for GoPro/Mobius
 
 ![Example of cleaned up image](https://github.com/rtgoodwin/ffmpeg-build-script-plus-frei0r-freetype/blob/master/compare.png)
 
+and another
+
+![Example of cleaned up image](https://github.com/rtgoodwin/ffmpeg-build-script-plus-frei0r-freetype/blob/master/compare2.png)
+
 (Blur at edges is in the original video; keep those lenses clean, people! :) )
 
 * For GoPro (or other cameras with less barrel distortion):
