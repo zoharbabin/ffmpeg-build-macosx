@@ -1,8 +1,7 @@
 #!/bin/sh
 
-# forked from:
 # http://www.github.com/markus-perl
-# Version 0.2 (my version 0.3)
+# Version 0.2
 
 CWD=`pwd`
 PACKAGES="$CWD/packages" 
@@ -217,6 +216,26 @@ if build "pkg-config"; then
 	build_done "pkg-config"
 fi
 
+
+if build "freetype"; then
+	download "http://download.savannah.gnu.org/releases/freetype/freetype-2.4.0.tar.bz2" "freetype-2.4.0.tar.bz2"
+	cd $PACKAGES/freet*
+	execute ./configure --silent --prefix=${WORKSPACE} --with-pc-path=${WORKSPACE}/lib/pkgconfig --disable-shared --enable-static
+	execute make -j 4
+	execute make install
+	build_done "freetype"
+fi
+
+if build "fontconfig"; then
+	download "http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.94.tar.gz" "fontconfig-2.11.94.tar.gz"
+	cd $PACKAGES/fontc*
+	execute ./configure --silent --prefix=${WORKSPACE} --with-pc-path=${WORKSPACE}/lib/pkgconfig --disable-shared --enable-static
+	execute make -j 4
+	execute make install
+	build_done "fontconfig"
+fi
+
+
 if build "cmake"; then
 	download "http://www.cmake.org/files/v3.0/cmake-3.0.2.tar.gz" "cmake-3.0.2.tar.gz"
 	cd $PACKAGES/cmake* 
@@ -278,16 +297,18 @@ fi
 build "ffmpeg"
 download "http://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 " "ffmpeg-snapshot.tar.bz2 "
 cd $PACKAGES/ffmpeg*
+# CFLAGS="-I$WORKSPACE/include `freetype-config --cflags`" LDFLAGS="-L$WORKSPACE/lib `freetype-config --libs`" 
 CFLAGS="-I$WORKSPACE/include" LDFLAGS="-L$WORKSPACE/lib" 
-execute ./configure  --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl --enable-libopencore_amrwb --enable-libopencore_amrnb --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r
+
+execute ./configure  --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl --enable-libopencore_amrwb --enable-libopencore_amrnb --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-libfreetype 
+# ./configure  --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl --enable-libopencore_amrwb --enable-libopencore_amrnb --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-libfreetype
 execute make -j 4
 execute make install
 
 echo ""
 echo "Building done. The binary can be found here: $WORKSPACE/bin/ffmpeg"
 echo ""
-# Modified to copy to local/bin as /usr/bin is write protected on some systems
-read -r -p "Install the binary to your /usr/local/bin/ folder (may prompt for sudo pass)? [Y/n] " response
+read -r -p "Install the binary to your /usr/local/bin/ folder? [Y/n] " response
 
 case $response in
     [yY][eE][sS]|[yY])
@@ -300,7 +321,7 @@ esac
 echo ""
 echo "The frei0r plugins can be found here: $WORKSPACE/lib/ in a folder named \"frei0r-1\""
 echo ""
-read -r -p "Copy frei0r plugins to your /usr/local/lib/frei0r-1 folder (needed for ffmpeg to find them, unless you manually copy elsewhere and export FREI0R_PATH) [Y/n] " response
+read -r -p "Copy frei0r plugins to your /usr/local/lib/frei0r-1 folder [Y/n] " response
 
 case $response in
      [yY][eE][sS]|[yY])
