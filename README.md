@@ -9,7 +9,8 @@ The original build script provides an easy way to build ffmpeg on OSX and Linux 
 Requirements OSX
 ------------
 
-* XCode 5.x or greater
+* XCode 5.x or greater with command line tools installed. Use either the Xcode UI, or from the terminal:
+```xcode-select --install```
 
 Requirements Linux
 ------------
