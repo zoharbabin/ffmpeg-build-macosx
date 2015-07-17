@@ -41,7 +41,19 @@ Tested on
 * Mac OSX 10.10, El Capitan Beta 2/3
 * Debian 7.5
 
-Example
+Example fisheye removal for GoPro/Mobius
+-------
+* For Mobius lens "C": 
+```ffmpeg -i <inputfile> -vf frei0r=defish0r:0.8:y:0.6:0 -vcodec libx264 -pix_fmt yuv420p -acodec copy <outputfile.mp4>```
+
+![Example of cleaned up image](github.com/rtgoodwin/ffmpeg-build-script-plus-frei0r-freetype/compare.jpg)
+
+* For GoPro (or other cameras with less barrel distortion):
+```ffmpeg -i <inputfile> -vf frei0r=defish0r:0.75:y:0.6:0 -vcodec libx264 -pix_fmt yuv420p -acodec copy <outputfile.mp4>```
+
+
+
+Example compilation output
 -------
 
 ```
