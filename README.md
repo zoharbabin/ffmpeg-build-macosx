@@ -10,9 +10,10 @@ Requirements OSX
 ------------
 
 * XCode 5.x or greater with command line tools installed. Use either the Xcode UI, or from the terminal:
+
 ```xcode-select --install```
 
-Requirements Linux
+Requirements for Linux
 ------------
 
 * build-essentials installed
@@ -45,11 +46,15 @@ Tested on
 Example fisheye removal for GoPro/Mobius
 -------
 * For Mobius lens "C": 
+
 ```ffmpeg -i <inputfile> -vf frei0r=defish0r:0.8:y:0.6:0 -vcodec libx264 -pix_fmt yuv420p -acodec copy <outputfile.mp4>```
 
 ![Example of cleaned up image](https://github.com/rtgoodwin/ffmpeg-build-script-plus-frei0r-freetype/blob/master/compare.png)
 
+(Blur at edges is in the original video; keep those lenses clean, people! :) )
+
 * For GoPro (or other cameras with less barrel distortion):
+
 ```ffmpeg -i <inputfile> -vf frei0r=defish0r:0.75:y:0.6:0 -vcodec libx264 -pix_fmt yuv420p -acodec copy <outputfile.mp4>```
 
 
