@@ -1,7 +1,9 @@
 build-ffmpeg-mac
 ==========
 
-This build script provides an easy way to build ffmpeg on OSX and Linux with non-free codecs included.
+This is a forked/modified script from the excellent original at https://github.com/markus-perl/ffmpeg-build-script
+
+The original build script provides an easy way to build ffmpeg on OSX and Linux with non-free codecs included. I added the frei0r plugins (for doing fisheye removal on cameras like GoPro, Mobius, etc.) and Freetype (for doing text overlays). 
 
 
 Requirements OSX
@@ -27,6 +29,8 @@ Usage
 Contact
 -------
 
+You can file an issue on this repo; I may be able to help with simple issues, but certainly the expert is the original creator:
+
 * Github: [http://www.github.com/markus-perl](http://www.github.com/markus-perl)
 * E-Mail: markus (at) www-factory.de
 
@@ -34,10 +38,22 @@ Contact
 Tested on
 ---------
 
-* Mac OSX 10.9 64Bit XCode 6.1
+* Mac OSX 10.10, El Capitan Beta 2/3
 * Debian 7.5
 
-Example
+Example fisheye removal for GoPro/Mobius
+-------
+* For Mobius lens "C": 
+```ffmpeg -i <inputfile> -vf frei0r=defish0r:0.8:y:0.6:0 -vcodec libx264 -pix_fmt yuv420p -acodec copy <outputfile.mp4>```
+
+![Example of cleaned up image](github.com/rtgoodwin/ffmpeg-build-script-plus-frei0r-freetype/compare.jpg)
+
+* For GoPro (or other cameras with less barrel distortion):
+```ffmpeg -i <inputfile> -vf frei0r=defish0r:0.75:y:0.6:0 -vcodec libx264 -pix_fmt yuv420p -acodec copy <outputfile.mp4>```
+
+
+
+Example compilation output
 -------
 
 ```
@@ -151,5 +167,5 @@ $ make install
 
 Building done. The binary can be found here: ~/dev/mac/ffmpeg/workspace/bin/sw/ffmpeg
 
-Install the binary to your /usr/bin/folder? [Y/n]
+Install the binary to your /usr/local/bin/folder? [Y/n]
 ```
