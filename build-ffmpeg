@@ -226,10 +226,22 @@ if build "freetype"; then
 	build_done "freetype"
 fi
 
+
+
+if build "libxml2"; then
+	download "ftp://xmlsoft.org/libxml2/libxml2-sources-2.9.2.tar.gz" "libxml2-sources-2.9.2.tar.gz"
+	cd $PACKAGES/libxm*
+	CFLAGS="-m64" execute ./configure  --prefix=${WORKSPACE} --enable-shared=yes --enable-static=yes --with-python=NO --with-python-install-dir=${WORKSPACE}/libxmlpython
+	execute make -j 4
+	execute make install
+	build_done "libxml2"
+fi
+
 if build "fontconfig"; then
 	download "http://www.freedesktop.org/software/fontconfig/release/fontconfig-2.11.94.tar.gz" "fontconfig-2.11.94.tar.gz"
 	cd $PACKAGES/fontc*
-	execute ./configure --silent --prefix=${WORKSPACE} --with-pc-path=${WORKSPACE}/lib/pkgconfig --disable-shared --enable-static
+	
+	execute ./configure  --prefix=${WORKSPACE} --with-pc-path=${WORKSPACE}/lib/pkgconfig --enable-shared=no --enable-static=yes --enable-libxml2
 	execute make -j 4
 	execute make install
 	build_done "fontconfig"
@@ -297,11 +309,9 @@ fi
 build "ffmpeg"
 download "http://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 " "ffmpeg-snapshot.tar.bz2 "
 cd $PACKAGES/ffmpeg*
-# CFLAGS="-I$WORKSPACE/include `freetype-config --cflags`" LDFLAGS="-L$WORKSPACE/lib `freetype-config --libs`" 
 CFLAGS="-I$WORKSPACE/include" LDFLAGS="-L$WORKSPACE/lib" 
-
-execute ./configure  --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl --enable-libopencore_amrwb --enable-libopencore_amrnb --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-libfreetype 
-# ./configure  --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl --enable-libopencore_amrwb --enable-libopencore_amrnb --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-libfreetype
+execute ./configure  --arch=64 --prefix=${WORKSPACE} --pkg-config-flags="--static" --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl --enable-libopencore_amrwb --enable-libopencore_amrnb --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-libfreetype --enable-fontconfig 
+# ./configure  --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl --enable-libopencore_amrwb --enable-libopencore_amrnb --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-libfreetype --enable-fontconfig
 execute make -j 4
 execute make install
 
@@ -312,6 +322,7 @@ read -r -p "Install the binary to your /usr/local/bin/ folder? [Y/n] " response
 
 case $response in
     [yY][eE][sS]|[yY])
+		sudo mkdir /usr/local/bin
         sudo cp "$WORKSPACE/bin/ffmpeg" "/usr/local/bin/ffmpeg"
         sudo cp "$WORKSPACE/bin/ffprobe" "/usr/local/bin/ffprobe"
         echo "Done. ffmpeg is now installed to your system"
@@ -325,7 +336,7 @@ read -r -p "Copy frei0r plugins to your /usr/local/lib/frei0r-1 folder [Y/n] " r
 
 case $response in
      [yY][eE][sS]|[yY])
-         sudo cp -Rv "$WORKSPACE/lib/frei0r-1" "/usr/local/lib/"
+         sudo cp -R "$WORKSPACE/lib/frei0r-1" "/usr/local/lib/"
          echo "Done. frei0r plugins are now installed to your system"
          ;;
 esac
