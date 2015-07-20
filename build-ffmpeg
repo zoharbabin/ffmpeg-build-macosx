@@ -231,7 +231,7 @@ fi
 if build "libxml2"; then
 	download "ftp://xmlsoft.org/libxml2/libxml2-sources-2.9.2.tar.gz" "libxml2-sources-2.9.2.tar.gz"
 	cd $PACKAGES/libxm*
-	CFLAGS="-m64" execute ./configure  --prefix=${WORKSPACE} --enable-shared=yes --enable-static=yes --with-python=NO --with-python-install-dir=${WORKSPACE}/libxmlpython
+	CFLAGS="-m64" execute ./configure  --prefix=${WORKSPACE} --disable-shared --enable-static=yes --with-python=NO --with-python-install-dir=${WORKSPACE}/libxmlpython
 	execute make -j 4
 	execute make install
 	build_done "libxml2"
