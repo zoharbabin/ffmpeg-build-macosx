@@ -3,7 +3,11 @@ build-ffmpeg-mac
 
 This is a forked/modified script from the excellent original at https://github.com/markus-perl/ffmpeg-build-script
 
-The original build script provides an easy way to build ffmpeg on OSX and Linux with non-free codecs included. I added the frei0r plugins (for doing fisheye removal on cameras like GoPro, Mobius, etc.) and Freetype (for doing text overlays). 
+The original build script provides an easy way to build ffmpeg on OSX and Linux with non-free codecs included. I added:
+* the frei0r plugins (for doing fisheye removal on cameras like GoPro, Mobius, etc.)
+* Freetype (for doing text overlays)
+* fontconfig (plus dependency libxml2) 
+
 
 
 Requirements OSX
