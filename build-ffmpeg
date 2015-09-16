@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Forked / adapted from http://www.github.com/markus-perl
-# Version 0.4
+# Forked from the excellent original at https://github.com/markus-perl/ffmpeg-build-script
+# Version 0.5
 
 CWD=`pwd`
 PACKAGES="$CWD/packages" 
@@ -122,18 +122,21 @@ if build "yasm"; then
 fi
 
 
-# if build "opencore"; then
-# 	download "http://garr.dl.sourceforge.net/project/opencore-amr/opencore-amr/opencore-amr-0.1.3.tar.gz" "opencore-amr-0.1.3.tar.gz"
-# 	cd $PACKAGES/opencore-amr-0.1.3 
-# 	execute ./configure --prefix=${WORKSPACE} --disable-shared --enable-static 
-# 	execute make -j 4 
-# 	execute make install
-# 	build_done "opencore"
-# fi
+if build "opencore"; then
+	download "http://downloads.sourceforge.net/project/opencore-amr/opencore-amr/opencore-amr-0.1.3.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fopencore-amr%2Ffiles%2Fopencore-amr%2F&ts=1442256558&use_mirror=netassist" "opencore-amr-0.1.3.tar.gz"
+	cd $PACKAGES/opencore-amr-0.1.3 
+	execute ./configure --prefix=${WORKSPACE} --disable-shared --enable-static 
+	execute make -j 4 
+	execute make install
+	build_done "opencore"
+fi
 
 if build "libvpx"; then
-	download "http://webm.googlecode.com/files/libvpx-v1.3.0.tar.bz2" "libvpx-v1.3.0.tar.bz2" 
-	cd $PACKAGES/libvpx-v1.3.0 
+	# download "http://webm.googlecode.com/files/libvpx-v1.3.0.tar.bz2" "libvpx-v1.3.0.tar.bz2" 
+	# cd $PACKAGES/libvpx-v1.3.0 
+	download "http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-1.4.0.tar.bz2" "libvpx-1.4.0.tar.bz2" 
+	cd $PACKAGES/libvpx* 
+	sed   -e 's/cp -p/cp/' -i build/make/Makefile
 	execute ./configure --prefix=${WORKSPACE} --disable-unit-tests --disable-shared
 	execute make -j 4
 	execute make install
@@ -300,9 +303,8 @@ cd $PACKAGES/ffmpeg*
 # CFLAGS="-I$WORKSPACE/include `freetype-config --cflags`" LDFLAGS="-L$WORKSPACE/lib `freetype-config --libs`" 
 CFLAGS="-I$WORKSPACE/include" LDFLAGS="-L$WORKSPACE/lib" 
 
-execute ./configure  --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl  --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-libfreetype 
-# ./configure  --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl --enable-libopencore_amrwb --enable-libopencore_amrnb --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-libfreetype
-# removed --enable-libopencore_amrwb --enable-libopencore_amrnb since download wasn't working
+execute ./configure  --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --enable-libopencore_amrwb --enable-libopencore_amrnb --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl  --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-libfreetype 
+
 execute make -j 4
 execute make install
 
