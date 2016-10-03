@@ -8,7 +8,7 @@ The original build script provides an easy way to build ffmpeg on OSX and Linux 
 * Freetype (for doing text overlays)
 * fontconfig (plus dependency libxml2) 
 
-This version also adds support for [avfoundation](https://www.ffmpeg.org/ffmpeg-devices.html#avfoundation) and open-ssl.
+This version also adds support for [avfoundation](https://www.ffmpeg.org/ffmpeg-devices.html#avfoundation).
 
 
 Requirements OSX
