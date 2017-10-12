@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Forked from the excellent original at https://github.com/markus-perl/ffmpeg-build-script
-# Version 0.5
+# Forked from https://github.com/rtgoodwin/ffmpeg-build-script-plus-frei0r-freetype and extended
+# Version 0.5zb1
 
 CWD=`pwd`
 PACKAGES="$CWD/packages" 
@@ -111,6 +111,14 @@ make_dir $CMPL
 
 export PATH=${WORKSPACE}/bin:$PATH
 
+if build "nasm"; then
+	download "http://www.nasm.us/pub/nasm/releasebuilds/2.13.01/nasm-2.13.01.tar.gz" "nasm-2.13.01.tar.gz"
+	cd $PACKAGES/nasm-2.13.01
+	execute ./configure --prefix=${WORKSPACE}
+	execute make -j 4
+	execute make install
+	build_done "nasm"
+fi
 
 if build "yasm"; then
 	download "http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz" "yasm-1.3.0.tar.gz"
@@ -221,7 +229,7 @@ fi
 
 
 if build "freetype"; then
-	download "http://download.savannah.gnu.org/releases/freetype/freetype-2.4.0.tar.bz2" "freetype-2.4.0.tar.bz2"
+	download "http://download.savannah.gnu.org/releases/freetype/freetype-2.8.tar.gz" "freetype-2.8.tar.gz"
 	cd $PACKAGES/freet*
 	execute ./configure --silent --prefix=${WORKSPACE} --with-pc-path=${WORKSPACE}/lib/pkgconfig --disable-shared --enable-static
 	execute make -j 4
@@ -284,7 +292,7 @@ if build "fdk_aac"; then
 fi
 
 if build "frei0r"; then
-       download "https://files.dyne.org/frei0r/snapshots/frei0r-snapshot-27-01-15.tar.gz" "frei0r-snapshot-27-01-15.tar.gz"
+       download "https://files.dyne.org/frei0r/releases/frei0r-plugins-1.6.1.tar.gz" "frei0r-plugins-1.6.1.tar.gz"
 
        cd $PACKAGES/frei0r*
        perl -p -i -e "s/OpenCV\" OFF/OpenCV\" ON/" CMakeLists.txt
@@ -298,12 +306,12 @@ if build "frei0r"; then
 fi
 
 build "ffmpeg"
-download "http://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 " "ffmpeg-snapshot.tar.bz2 "
-cd $PACKAGES/ffmpeg*
-# CFLAGS="-I$WORKSPACE/include `freetype-config --cflags`" LDFLAGS="-L$WORKSPACE/lib `freetype-config --libs`" 
-CFLAGS="-I$WORKSPACE/include" LDFLAGS="-L$WORKSPACE/lib" 
+download "http://ffmpeg.org/releases/ffmpeg-3.3.4.tar.bz2" "ffmpeg-3.3.4.tar.bz2"
+cd $PACKAGES/ffmpeg-3.3.4
+CFLAGS="-I$WORKSPACE/include `$WORKSPACE/bin/freetype-config --cflags` -I$WORKSPACE/include/vorbis" LDFLAGS="-L$WORKSPACE/lib `$WORKSPACE/bin/freetype-config --libs`" 
+# CFLAGS="-I$WORKSPACE/include" LDFLAGS="-L$WORKSPACE/lib" 
 
-execute ./configure  --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --enable-libopencore_amrwb --enable-libopencore_amrnb --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl  --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-libfreetype --enable-indev=avfoundation 
+execute ./configure --arch=64 --prefix=${WORKSPACE} --extra-cflags="-I$WORKSPACE/include" --extra-cflags="-I$WORKSPACE/include/vorbis" --extra-cflags="`$WORKSPACE/bin/freetype-config --cflags`" --extra-ldflags="-L$WORKSPACE/lib" --extra-version=static --disable-debug --disable-shared --enable-static --enable-libopencore_amrwb --enable-libopencore_amrnb --extra-cflags=--static --disable-ffplay --disable-ffserver --disable-doc --enable-version3 --enable-libvpx --enable-libmp3lame --enable-libtheora --enable-libvorbis --enable-libx264 --enable-avfilter --enable-gpl  --enable-nonfree --enable-filters --enable-libvidstab --enable-libx265 --enable-runtime-cpudetect --enable-libfdk-aac --enable-frei0r --enable-indev=avfoundation 
 
 execute make -j 4
 execute make install
