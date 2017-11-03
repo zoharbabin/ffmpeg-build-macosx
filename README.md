@@ -90,6 +90,7 @@ Example fisheye removal for GoPro/Mobius
 ```ffmpeg -i <inputfile> -vf frei0r=defish0r:0.8:y:0.6:0 -vcodec libx264 -pix_fmt yuv420p -acodec copy <outputfile.mp4>```
 
 ![Example of cleaned up image](https://github.com/rtgoodwin/ffmpeg-build-script-plus-frei0r-freetype/blob/master/compare.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fzoharbabin%2Fffmpeg-build-macosx.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fzoharbabin%2Fffmpeg-build-macosx?ref=badge_shield)
 
 and another
 
@@ -257,3 +258,7 @@ The frei0r plugins can be found here: /Users/zohar.babin/Downloads/ffmpeg-build/
 
 Copy frei0r plugins to your /usr/local/lib/frei0r-1 folder [Y/n]
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fzoharbabin%2Fffmpeg-build-macosx.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fzoharbabin%2Fffmpeg-build-macosx?ref=badge_large)
