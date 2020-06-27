@@ -43,7 +43,7 @@ download () {
 	if [ ! -f "$PACKAGES/$2" ]; then
 	
 		printf "Downloading $1"
-		curl -L --silent -o "$PACKAGES/$2" "$1"
+		curl -L --silent --ftp-method singlecwd -o "$PACKAGES/$2" "$1"
         
         EXITCODE=$?
         if [ $EXITCODE -ne 0 ]; then
